@@ -33,7 +33,7 @@ function setup(webContents) {
     // Retrieve saved senderId
     const savedSenderId = config.get('senderId');
     if (started) {
-      webContents.send(NOTIFICATION_SERVICE_STARTED, ((credentials && credentials.fcm) || {}));
+      webContents.send(NOTIFICATION_SERVICE_STARTED, credentials);
       return;
     }
     started = true;
@@ -53,7 +53,7 @@ function setup(webContents) {
       // Listen for GCM/FCM notifications
       await listen(Object.assign({}, credentials, { persistentIds }), onNotification(webContents));
       // Notify the renderer process that we are listening for notifications
-      webContents.send(NOTIFICATION_SERVICE_STARTED, credentials.fcm);
+      webContents.send(NOTIFICATION_SERVICE_STARTED, credentials);
     } catch (e) {
       console.error('PUSH_RECEIVER:::Error while starting the service', e);
       // Forward error to the renderer process
@@ -76,7 +76,7 @@ function onNotification(webContents) {
     config.set('persistentIds', [...persistentIds, persistentId]);
     // Notify the renderer process that a new notification has been received
     // And check if window is not destroyed for darwin Apps
-    if(!webContents.isDestroyed()){
+    if (!webContents.isDestroyed()) {
       webContents.send(NOTIFICATION_RECEIVED, notification);
     }
   };
