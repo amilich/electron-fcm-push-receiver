@@ -53,7 +53,7 @@ function setup(webContents) {
       // Listen for GCM/FCM notifications
       await listen(Object.assign({}, credentials, { persistentIds }), onNotification(webContents));
       // Notify the renderer process that we are listening for notifications
-      webContents.send(NOTIFICATION_SERVICE_STARTED, credentials.fcm.token);
+      webContents.send(NOTIFICATION_SERVICE_STARTED, credentials.fcm);
     } catch (e) {
       console.error('PUSH_RECEIVER:::Error while starting the service', e);
       // Forward error to the renderer process
